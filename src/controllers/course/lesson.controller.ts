@@ -4,7 +4,7 @@ import LessonService from '../../service/course/lesson.service';
 
 export const createLesson = catchAsync(async (req: Request, res: Response) => {
   const lessonData = {
-    ...req.body,
+  ...req.body,
     videoPath: req.file?.path, // ✅ Pass the uploaded file's path
   };
 
@@ -28,10 +28,15 @@ export const getLessonById = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const updateLesson = catchAsync(async (req: Request, res: Response) => {
-  const updated = await LessonService.updateLesson(req.params.id, req.body);
+  const videoPath = req.file?.path; // ✅ capture uploaded file path
+
+  const updated = await LessonService.updateLesson(req.params.id, {
+    ...req.body,
+    videoPath, // ✅ include it in the payload
+  });
+
   res.status(200).json({ message: 'Lesson updated successfully', updated });
 });
-
 export const deleteLesson = catchAsync(async (req: Request, res: Response) => {
   await LessonService.deleteLesson(req.params.id);
   res.status(200).json({ message: 'Lesson deleted successfully' });

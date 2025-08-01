@@ -62,21 +62,26 @@ class CourseService {
   }
 
   async getCourseById(id: string): Promise<ICourse> {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new CustomError('Invalid course ID', 400);
-    }
-
-    const course = await Course.findById(id)
-      .populate('category')
-      .populate('lessons')
-      .populate('instructor');
-
-    if (!course) {
-      throw new CustomError('Course not found', 404);
-    }
-
-    return course;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new CustomError('Invalid course ID', 400);
   }
+
+  const course = await Course.findById(id)
+    .populate('category')
+    .populate({
+      path: 'lessons',
+      select: 'title videoUrl videoType order videoDuration isFreePreview content',
+    })
+    .populate('instructor');
+
+  if (!course) {
+    throw new CustomError('Course not found', 404);
+  }
+  //  console.log(course)
+  return course;
+}
+
+
 
   async updateCourse(id: string, updates: Partial<CourseData>): Promise<ICourse> {
     if (!mongoose.Types.ObjectId.isValid(id)) {
