@@ -1,4 +1,3 @@
-// src/services/community/community.stats.service.ts
 import mongoose from "mongoose";
 import CommunityStats, { ICommunityStats } from "../../models/code/community.stats.schema";
 import CustomError from "../../utils/custom.error";

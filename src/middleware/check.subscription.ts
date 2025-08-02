@@ -1,4 +1,3 @@
-// src/middleware/check.subscription.ts
 import { Request, Response, NextFunction } from "express";
 import SubscriptionService from "../service/subscription/subscription.service";
 

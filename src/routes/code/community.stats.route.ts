@@ -1,4 +1,3 @@
-// src/routes/code/community.stats.routes.ts
 import express from "express";
 import { validateRequest } from "../../middleware/validation.middleware";
 import { isAuthenticate } from "../../middleware/is.authenticate";

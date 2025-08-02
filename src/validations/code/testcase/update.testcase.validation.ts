@@ -1,4 +1,3 @@
-// validations/testcaseValidation/update.testcase.validation.ts
 import { body, ValidationChain } from 'express-validator';
 
 export const updateTestCaseValidation: ValidationChain[] = [

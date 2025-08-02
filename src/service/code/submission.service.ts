@@ -12,9 +12,7 @@ interface CreateSubmissionInput {
 }
 
 class SubmissionService {
-  /**
-   * Create a new submission in Pending state.
-   */
+
   async createSubmission(data: CreateSubmissionInput): Promise<ISubmission> {
     const problemExists = await Problem.findById(data.problem);
     if (!problemExists) {
@@ -26,7 +24,6 @@ class SubmissionService {
       status: "Pending",
     });
 
-      // ✅ If submission is accepted, increment community solution count
   if (submission.status === "Accepted") {
     await CommunityStats.findOneAndUpdate(
       { user: submission.user },
@@ -39,10 +36,7 @@ class SubmissionService {
     return submission;
   }
 
-  /**
-   * Update submission after Judge0 results are available.
-   * Supports updating status, output, error, executionTime, and memory.
-   */
+  
   async updateSubmissionResult(
     id: string,
     result: Partial<
@@ -61,9 +55,7 @@ class SubmissionService {
     return updated;
   }
 
-  /**
-   * Get all submissions for a specific user.
-   */
+
   async getUserSubmissions(userId: string) {
     return Submission.find({ user: userId }).populate("problem");
   }
@@ -86,9 +78,7 @@ class SubmissionService {
     };
   }
 
-  /**
-   * Get a single submission by its ID (with problem + user populated).
-   */
+
   async getSubmissionById(id: string) {
     const submission = await Submission.findById(id)
       .populate("user")
@@ -122,10 +112,7 @@ class SubmissionService {
    }
   
 
-  /**
-   * Get count of unique problems solved per language for a user.
-   * Example output: [ { language: "C++", problemsSolved: 37 }, { language: "JavaScript", problemsSolved: 12 } ]
-   */
+
   async getSolvedProblemsByLanguage(userId: string) {
     const results = await Submission.aggregate([
       {
@@ -157,10 +144,7 @@ class SubmissionService {
     return results;
   }
 
-  /**
-   * Get most recent Accepted submissions for a user.
-   * Returns up to `limit` items with problem title, slug, and solved date.
-   */
+
   async getRecentAccepted(userId: string, limit = 10) {
     const recents = await Submission.find({
       user: new mongoose.Types.ObjectId(userId),
@@ -178,10 +162,7 @@ class SubmissionService {
     }));
   }
 
-  /**
-   * Get submission activity counts per day for the last `days` days (for heatmap).
-   * Returns array: [ { date: '2025-07-24', count: 5 }, ... ]
-   */
+
   async getUserSubmissionActivity(userId: string, days = 90) {
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);

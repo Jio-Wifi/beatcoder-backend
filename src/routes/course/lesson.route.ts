@@ -1,4 +1,3 @@
-// routes/course/lessonRoutes.ts
 import express from 'express';
 
 import {

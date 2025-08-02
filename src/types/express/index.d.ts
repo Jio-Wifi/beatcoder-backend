@@ -1,4 +1,3 @@
-// src/types/express/index.d.ts
 import { IUser } from '../../models/user/user.schema';
 import { JwtPayload } from 'jsonwebtoken';
 

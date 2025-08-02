@@ -1,4 +1,3 @@
-// src/validations/code/communityStats/create.community.stats.validation.ts
 import { body } from "express-validator";
 
 export const createCommunityStatsValidation = [

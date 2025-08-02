@@ -9,9 +9,7 @@ import config from "../../config";
 const RAZORPAY_WEBHOOK_SECRET = config.RAZORPAY_WEBHOOK_SECRET;
 
 class SubscriptionService {
-  /**
-   * Admin creates a new subscription plan (Razorpay + MongoDB).
-   */
+ 
   async createSubscriptionPlan(
     name: string,
     price: number, // in paise (₹100 = 10000)
@@ -80,7 +78,6 @@ class SubscriptionService {
     });
   }
 
-  /** Cancel an active subscription */
   async cancelUserSubscription(subscriptionId: string): Promise<IUserSubscription> {
     const subscription = await UserSubscription.findOne({
       razorpaySubscriptionId: subscriptionId,
@@ -95,7 +92,6 @@ class SubscriptionService {
     return subscription;
   }
 
-  /** Check if user has an active subscription */
   async isUserSubscribed(userId: string): Promise<boolean> {
     const activeSub = await UserSubscription.findOne({
       userId,
@@ -105,9 +101,7 @@ class SubscriptionService {
     return !!activeSub;
   }
 
-  /**
-   * Verify Razorpay Webhook Signature, Update Subscription Status.
-   */
+  
   async verifyRazorpayWebhook(payload: any, signature: string): Promise<void> {
     const expectedSignature = crypto
       .createHmac("sha256", RAZORPAY_WEBHOOK_SECRET)
@@ -152,7 +146,6 @@ class SubscriptionService {
     }
   }
 
-  /** Calculate total revenue from your DB (active and completed subscriptions) */
   async getRevenueFromDB(): Promise<number> {
     const result = await UserSubscription.aggregate([
       { $match: { status: { $in: ["active", "expired", "cancelled"] } } }, 
@@ -161,7 +154,6 @@ class SubscriptionService {
     return result.length ? result[0].total / 100 : 0; // Convert paise → ₹
   }
 
-  /** Get total revenue directly from Razorpay (real-time, gross) */
   async getRevenueFromRazorpay(): Promise<number> {
     const payments = await razorpay.payments.all({ from: 0, count: 100 });
     const successfulPayments = payments.items.filter(p => p.status === "captured");
@@ -169,8 +161,7 @@ class SubscriptionService {
 
   }
 
-  /** Get settlements (actual credited to bank) */
-  async getSettlements(): Promise<{ total: number; settlements: any[] }> {
+async getSettlements(): Promise<{ total: number; settlements: any[] }> {
     const settlements = await razorpay.settlements.all({ count: 50 });
     return {
       total: settlements.items.reduce((acc, s) => acc + Number(s.amount), 0) / 100,
@@ -178,7 +169,6 @@ class SubscriptionService {
     };
   }
 
-   /** Get full subscription details for a user (plan + status) */
   async getUserSubscriptionDetails(userId: mongoose.Types.ObjectId) {
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       throw new CustomError("Invalid user ID", 400);
